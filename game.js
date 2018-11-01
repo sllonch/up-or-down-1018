@@ -2,6 +2,7 @@ function Game() {
   this.score = 0;
   this.step = 0;
   this.cards = [1, 3, 2, 4];
+  this.timeLeft = null;
 }
 
 Game.prototype.start = function() {
@@ -44,17 +45,38 @@ Game.prototype.start = function() {
   this.leftNumberElement.innerText = this.cards[this.step]
 
 
-  setTimeout(function() {
-    this.finishGame();
-  }.bind(this), 3000)
+  this.startTimer();
 
 }
 
 Game.prototype.startTimer = function() {
 
+  this.timeLeft = 3;
+  this.timeElement.innerText = this.timeLeft;
+
+  this.intervalId = setInterval(function() {
+    this.timeLeft--;
+    this.timeElement.innerText = this.timeLeft;
+
+    if (this.timeLeft === 0) {
+      clearInterval(this.intervalId);
+      this.nextCard();
+    }
+
+  }.bind(this), 1000)
 }
 
 Game.prototype.nextCard = function() {
+  this.step++;
+
+  if (this.step === this.cards.length) {
+    this.finishGame();
+  }
+  
+  this.leftNumberElement.innerText = this.cards[this.step];
+  this.startTimer();
+
+  
 
 }
 
